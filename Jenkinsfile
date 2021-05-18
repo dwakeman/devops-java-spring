@@ -38,7 +38,8 @@ def buildLabel = "wakey-build"
 //def buildLabel = buildAgentName(env.JOB_NAME, env.BUILD_NUMBER, env.NAMESPACE);
 def branch = env.BRANCH ?: "master"
 def namespace = env.NAMESPACE ?: "dev"
-def cloudName = env.CLOUD_NAME == "openshift"
+//def cloudName = env.CLOUD_NAME == "openshift"
+def cloudName = "openshift"
 def workingDir = "/home/jenkins/agent"
 podTemplate(
    label: buildLabel,
