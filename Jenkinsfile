@@ -36,7 +36,7 @@ println "Secret name: ${secretName}"
 
 def buildLabel = "master"
 //def buildLabel = buildAgentName(env.JOB_NAME, env.BUILD_NUMBER, env.NAMESPACE);
-def branch = env.BRANCH ?: "master"
+def branch = env.BRANCH ?: "openshift"
 def namespace = env.NAMESPACE ?: "dev"
 //def cloudName = env.CLOUD_NAME == "openshift"
 def cloudName = "openshift"
