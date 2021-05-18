@@ -37,7 +37,7 @@ println "Secret name: ${secretName}"
 def buildLabel = buildAgentName(env.JOB_NAME, env.BUILD_NUMBER, env.NAMESPACE);
 def branch = env.BRANCH ?: "master"
 def namespace = env.NAMESPACE ?: "dev"
-def cloudName = env.CLOUD_NAME == "openshift" ? "openshift" : "kubernetes"
+def cloudName = env.CLOUD_NAME == "openshift"
 def workingDir = "/home/jenkins/agent"
 podTemplate(
    label: buildLabel,
