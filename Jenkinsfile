@@ -34,7 +34,7 @@ def secretName = buildSecretName(env.JOB_NAME, env.NAMESPACE)
 println "Job name: ${env.JOB_NAME}"
 println "Secret name: ${secretName}"
 
-def buildLabel = "wakey-build"
+//def buildLabel = "wakey-build"
 //def buildLabel = buildAgentName(env.JOB_NAME, env.BUILD_NUMBER, env.NAMESPACE);
 def branch = env.BRANCH ?: "master"
 def namespace = env.NAMESPACE ?: "dev"
