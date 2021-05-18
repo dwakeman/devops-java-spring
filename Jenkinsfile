@@ -195,7 +195,7 @@ spec:
             optional: true
 """
 ) {
-    node(buildLabel) {
+    node(POD_LABEL) {
         container(name: 'jdk11', shell: '/bin/bash') {
             checkout scm
             stage('Setup') {
