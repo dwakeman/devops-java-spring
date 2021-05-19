@@ -238,72 +238,72 @@ spec:
         //         '''
         //     }
         // }
-        // container(name: 'node', shell: '/bin/bash') {
-        //     stage('Tag release') {
-        //         sh '''#!/bin/bash
-        //             set -x
-        //             set -e
+        container(name: 'node', shell: '/bin/bash') {
+            stage('Tag release') {
+                sh '''#!/bin/bash
+                    set -x
+                    set -e
 
-        //             if [[ -z "$GIT_AUTH_USER" ]] || [[ -z "$GIT_AUTH_PWD" ]]; then
-        //               echo "Git credentials not found. The pipeline expects to find them in a secret named 'git-credentials'."
-        //               echo "  Update your CLI and register the pipeline again"
-        //               exit 1
-        //             fi
+                    if [[ -z "$GIT_AUTH_USER" ]] || [[ -z "$GIT_AUTH_PWD" ]]; then
+                      echo "Git credentials not found. The pipeline expects to find them in a secret named 'git-credentials'."
+                      echo "  Update your CLI and register the pipeline again"
+                      exit 1
+                    fi
 
-        //             git config --local credential.helper "!f() { echo username=\\$GIT_AUTH_USER; echo password=\\$GIT_AUTH_PWD; }; f"
+                    git config --local credential.helper "!f() { echo username=\\$GIT_AUTH_USER; echo password=\\$GIT_AUTH_PWD; }; f"
                     
-        //             git fetch
-        //             git fetch --tags
-        //             git tag -l
+                    git fetch
+                    git fetch --tags
+                    git tag -l
 
-        //             git fetch
-        //             git fetch --tags
-        //             git tag -l
+                    git fetch
+                    git fetch --tags
+                    git tag -l
 
-        //             COMMIT_HASH=$(git rev-parse HEAD)
-        //             git checkout -b ${BRANCH} --track origin/${BRANCH}
-        //             git branch --set-upstream-to=origin/${BRANCH} ${BRANCH}
-        //             git reset --hard ${COMMIT_HASH}
+                    COMMIT_HASH=$(git rev-parse HEAD)
+                    git checkout -b ${BRANCH} --track origin/${BRANCH}
+                    git branch --set-upstream-to=origin/${BRANCH} ${BRANCH}
+                    git reset --hard ${COMMIT_HASH}
 
-        //             git config --global user.name "Jenkins Pipeline"
-        //             git config --global user.email "jenkins@ibmcloud.com"
+                    git config --global user.name "Jenkins Pipeline"
+                    git config --global user.email "jenkins@ibmcloud.com"
 
-        //             if [[ "${BRANCH}" == "master" ]] && [[ $(git describe --tag `git rev-parse HEAD`) =~ (^[0-9]+.[0-9]+.[0-9]+$) ]] || \
-        //                [[ $(git describe --tag `git rev-parse HEAD`) =~ (^[0-9]+.[0-9]+.[0-9]+-${BRANCH}[.][0-9]+$) ]]
-        //             then
-        //                 echo "Latest commit is already tagged"
-        //                 echo "IMAGE_NAME=$(basename -s .git `git config --get remote.origin.url` | tr '[:upper:]' '[:lower:]' | sed 's/_/-/g')" > ./env-config
-        //                 echo "IMAGE_VERSION=$(git describe --abbrev=0 --tags)" >> ./env-config
-        //                 exit 0
-        //             fi
+                    if [[ "${BRANCH}" == "master" ]] && [[ $(git describe --tag `git rev-parse HEAD`) =~ (^[0-9]+.[0-9]+.[0-9]+$) ]] || \
+                       [[ $(git describe --tag `git rev-parse HEAD`) =~ (^[0-9]+.[0-9]+.[0-9]+-${BRANCH}[.][0-9]+$) ]]
+                    then
+                        echo "Latest commit is already tagged"
+                        echo "IMAGE_NAME=$(basename -s .git `git config --get remote.origin.url` | tr '[:upper:]' '[:lower:]' | sed 's/_/-/g')" > ./env-config
+                        echo "IMAGE_VERSION=$(git describe --abbrev=0 --tags)" >> ./env-config
+                        exit 0
+                    fi
 
-        //             mkdir -p ~/.npm
-        //             npm config set prefix ~/.npm
-        //             export PATH=$PATH:~/.npm/bin
-        //             npm i -g release-it
+                    mkdir -p ~/.npm
+                    npm config set prefix ~/.npm
+                    export PATH=$PATH:~/.npm/bin
+                    npm i -g release-it
 
-        //             if [[ "${BRANCH}" != "master" ]]; then
-        //                 PRE_RELEASE="--preRelease=${BRANCH}"
-        //             fi
+                    if [[ "${BRANCH}" != "master" ]]; then
+                        PRE_RELEASE="--preRelease=${BRANCH}"
+                    fi
 
-        //             release-it patch ${PRE_RELEASE} \
-        //               --ci \
-        //               --no-npm \
-        //               --no-git.push \
-        //               --no-git.requireCleanWorkingDir \
-        //               --verbose \
-        //               -VV
+                    release-it patch ${PRE_RELEASE} \
+                      --ci \
+                      --no-npm \
+                      --no-git.push \
+                      --no-git.requireCleanWorkingDir \
+                      --verbose \
+                      -VV
 
-        //             git push --follow-tags -v
+                    git push --follow-tags -v
 
-        //             echo "IMAGE_VERSION=$(git describe --abbrev=0 --tags)" > ./env-config
-        //             echo "IMAGE_NAME=$(basename -s .git `git config --get remote.origin.url` | tr '[:upper:]' '[:lower:]' | sed 's/_/-/g')" >> ./env-config
-        //             echo "REPO_URL=$(git config --get remote.origin.url)" >> ./env-config
+                    echo "IMAGE_VERSION=$(git describe --abbrev=0 --tags)" > ./env-config
+                    echo "IMAGE_NAME=$(basename -s .git `git config --get remote.origin.url` | tr '[:upper:]' '[:lower:]' | sed 's/_/-/g')" >> ./env-config
+                    echo "REPO_URL=$(git config --get remote.origin.url)" >> ./env-config
 
-        //             cat ./env-config
-        //         '''
-        //     }
-        // }
+                    cat ./env-config
+                '''
+            }
+        }
         container(name: 'buildah', shell: '/bin/bash') {
             stage('Build image') {
                 sh '''#!/bin/bash
